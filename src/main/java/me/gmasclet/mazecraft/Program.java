@@ -15,7 +15,6 @@ import net.morbz.minecraft.world.World;
 public class Program {
 
     public static void main(String[] args) {
-
         DefaultLayers layers = new DefaultLayers();
         IGenerator generator = new FlatGenerator(layers);
 
@@ -24,7 +23,24 @@ public class Program {
         level.setSpawnPoint(50, 1, 10);
 
         World world = new World(level, layers);
+        createArena(world);
 
+        Maze maze = new MazeGenerator().generate(20);
+        setBlocks(world, maze);
+
+        try {
+            world.save();
+
+            Files.move(
+                    Paths.get("worlds", level.getLevelName()),
+                    Paths.get(System.getProperty("user.home"), ".minecraft", "saves", level.getLevelName()));
+
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+    }
+
+    private static void createArena(World world) {
         for (int x = 0; x < 100; x++) {
             for (int z = 0; z < 100; z++) {
                 world.setBlock(x, 0, z, SimpleBlock.BEDROCK);
@@ -50,16 +66,9 @@ public class Program {
                 world.setBlock(99, y, z, SimpleBlock.BEDROCK);
             }
         }
+    }
 
-        try {
-            world.save();
-
-            Files.move(
-                    Paths.get("worlds", level.getLevelName()),
-                    Paths.get(System.getProperty("user.home"), ".minecraft", "saves", level.getLevelName()));
-
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
+    private static void setBlocks(World world, Maze maze) {
+        // TODO this is a stub
     }
 }
