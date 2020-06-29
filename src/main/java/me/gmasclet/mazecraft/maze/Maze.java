@@ -1,10 +1,14 @@
-package me.gmasclet.mazecraft;
+package me.gmasclet.mazecraft.maze;
 
+/**
+ * Represents a maze as a square grid of cells, namely a square divided as n x n
+ * cells.
+ */
 public class Maze {
 
     private final Cell[][] cells;
 
-    public Maze(int size) {
+    Maze(int size) {
         cells = new Cell[size][size];
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -25,10 +29,18 @@ public class Maze {
 
     }
 
+    /**
+     * @return The number of cells per side of the grid
+     */
     public int getSize() {
         return cells.length;
     }
 
+    /**
+     * @param x The X coordinate, between 0 and getSize() -1
+     * @param y The Y coordinate, between 0 and getSize() -1
+     * @return The cell at position (x, y)
+     */
     public Cell getCell(int x, int y) {
         return cells[x][y];
     }

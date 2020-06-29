@@ -1,4 +1,4 @@
-package me.gmasclet.mazecraft;
+package me.gmasclet.mazecraft.maze;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * This class generates mazes using Wilson's algorithm.
+ *
+ * This algorithm generates unbiased mazes, that is to say there is no
+ * distinctive pattern among generated mazes. It uses loop-erased random walks.
+ */
 public class MazeGenerator {
 
     private final Random random;
@@ -14,6 +20,12 @@ public class MazeGenerator {
         this.random = new Random();
     }
 
+    /**
+     * Randomly creates a new maze.
+     *
+     * @param size The number of cells per side (has to be greater than 0)
+     * @return A new maze instance
+     */
     public Maze generate(int size) {
         Maze maze = new Maze(size);
 

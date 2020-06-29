@@ -1,5 +1,8 @@
 package me.gmasclet.mazecraft;
 
+import me.gmasclet.mazecraft.maze.Maze;
+import me.gmasclet.mazecraft.maze.Cell;
+import me.gmasclet.mazecraft.maze.MazeGenerator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,8 +18,17 @@ import net.morbz.minecraft.level.Level;
 import net.morbz.minecraft.world.DefaultLayers;
 import net.morbz.minecraft.world.World;
 
+/**
+ * Generates a Minecraft map containing a ramdomly created maze. This map is
+ * saved in Minecraft saves directory.
+ */
 public class Program {
 
+    /**
+     * Entry point.
+     *
+     * @param args Unused
+     */
     public static void main(String[] args) {
         int size = promptForSize();
         String levelName = String.format(
