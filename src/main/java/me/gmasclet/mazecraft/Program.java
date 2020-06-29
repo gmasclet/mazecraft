@@ -3,7 +3,9 @@ package me.gmasclet.mazecraft;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 import net.morbz.minecraft.blocks.SimpleBlock;
 import net.morbz.minecraft.blocks.StoneBlock;
 import net.morbz.minecraft.level.FlatGenerator;
@@ -16,17 +18,15 @@ import net.morbz.minecraft.world.World;
 public class Program {
 
     public static void main(String[] args) {
+        int size = promptForSize();
+        String levelName = String.format(
+                "Mazecraft %1$dx%1$d %2$s",
+                size,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
 
-        DefaultLayers layers = new DefaultLayers();
-        IGenerator generator = new FlatGenerator(layers);
+        Maze maze = new MazeGenerator().generate(size);
 
-        Level level = new Level("Mazecraft-" + Instant.now().getEpochSecond(), generator);
-        level.setGameType(GameType.CREATIVE);
-        level.setSpawnPoint(-3, 1, -3);
-
-        Maze maze = new MazeGenerator().generate(20);
-
-        World world = new World(level, layers);
+        World world = newWorld(levelName);
         createArena(world, -5, maze.getSize() * 3 + 6);
         setBlocks(world, maze);
 
@@ -34,12 +34,30 @@ public class Program {
             world.save();
 
             Files.move(
-                    Paths.get("worlds", level.getLevelName()),
-                    Paths.get(System.getProperty("user.home"), ".minecraft", "saves", level.getLevelName()));
+                    Paths.get("worlds", levelName),
+                    Paths.get(System.getProperty("user.home"), ".minecraft", "saves", levelName));
 
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }
+    }
+
+    private static int promptForSize() {
+        System.out.println("Select maze size:");
+        Scanner scanner = new Scanner(System.in);
+        return Math.max(scanner.nextInt(), 0);
+    }
+
+    private static World newWorld(String levelName) {
+        DefaultLayers layers = new DefaultLayers();
+        IGenerator generator = new FlatGenerator(layers);
+
+        Level level = new Level(levelName, generator);
+        level.setGameType(GameType.CREATIVE);
+        level.setMapFeatures(false);
+        level.setSpawnPoint(-3, 1, -3);
+
+        return new World(level, layers);
     }
 
     private static void createArena(World world, int min, int max) {
