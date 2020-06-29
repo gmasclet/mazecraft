@@ -1,0 +1,12 @@
+Mazecraft
+Copyright 2020 Guillaume Masclet <guillaume.masclet@yahoo.fr>
+
+Licensed under the Apache License 2.0
+
+Includes the J2Blocks library, licensed under the MIT License
+https://github.com/MorbZ/J2Blocks
+Copyright 2014-2015 Merten Peetz
+
+Includes the JNTB library, licensed under the JNBT License
+https://github.com/Morlok8k/JNBT/tree/master/src/org/jnbt
+Copyright 2010 Graham Edgecombe
