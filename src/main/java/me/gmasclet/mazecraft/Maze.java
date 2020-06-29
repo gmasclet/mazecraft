@@ -40,37 +40,22 @@ public class Maze {
         for (int y = 0; y < cells.length; y++) {
             for (int x = 0; x < cells.length; x++) {
                 Cell cell = cells[x][y];
-                builder.append("+");
-                if (y == 0 || !cell.isLinked(cell.getNorth())) {
-                    builder.append("---");
-                } else {
-                    builder.append("   ");
-                }
+                builder.append("+").append(cell.isLinked(cell.getNorth()) ? "   " : "---");
             }
-            builder.append("+");
-            builder.append(System.lineSeparator());
+            builder.append("+").append(System.lineSeparator());
 
             for (int x = 0; x < cells.length; x++) {
                 Cell cell = cells[x][y];
-
-                if (x == 0 || !cell.isLinked(cell.getWest())) {
-                    builder.append("|");
-                } else {
-                    builder.append(" ");
-                }
-                builder.append("   ");
+                builder.append(cell.isLinked(cell.getWest()) ? " " : "|").append("   ");
             }
-            builder.append("|");
-            builder.append(System.lineSeparator());
+            builder.append("|").append(System.lineSeparator());
         }
 
         for (int x = 0; x < cells.length; x++) {
-            builder.append("+");
-            builder.append("---");
+            builder.append("+---");
         }
-        builder.append("+");
-        builder.append(System.lineSeparator());
-
-        return builder.toString();
+        return builder.append("+")
+                .append(System.lineSeparator())
+                .toString();
     }
 }
