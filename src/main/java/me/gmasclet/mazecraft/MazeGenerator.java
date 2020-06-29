@@ -30,6 +30,8 @@ public class MazeGenerator {
         }
 
         while (!unvisited.isEmpty()) {
+            System.out.println(visited.size() + " / " + size * size);
+
             List<Cell> walk = new ArrayList<>();
             walk.add(getRandom(unvisited));
             Cell next = null;
