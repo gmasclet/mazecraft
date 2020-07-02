@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class generates mazes using Wilson's algorithm.
@@ -79,6 +80,56 @@ public class MazeGenerator {
             }
         }
         return maze;
+    }
+
+    /**
+     * Links dead-end cells of the maze, actually removing them.The resulting
+     * maze is no longer perfect, that is to say it no longer have a single
+     * solution.
+     *
+     * @param maze Maze to alter
+     * @param percentage Percentage of dead-ends to remove between 0 and 100
+     */
+    public void removeDeadEnds(Maze maze, int percentage) {
+        List<Cell> deadEnds = new ArrayList<>();
+        for (int x = 0; x < maze.getSize(); x++) {
+            for (int y = 0; y < maze.getSize(); y++) {
+                Cell cell = maze.getCell(x, y);
+                if (cell.getLinks().size() == 1) {
+                    deadEnds.add(cell);
+                }
+            }
+        }
+
+        int target = Math.max(0, Math.round((100 - percentage) * deadEnds.size() / 100f));
+        while (deadEnds.size() > target) {
+            Cell cell = getRandom(deadEnds);
+            List<Cell> candidates = cell.getNeighbors()
+                    .stream()
+                    .filter(x -> !cell.isLinked(x))
+                    .collect(Collectors.toList());
+
+            List<Cell> otherDeadEnds = candidates.stream()
+                    .filter(x -> false && x.getLinks().size() == 1)
+                    .collect(Collectors.toList());
+
+            List<Cell> almostLinks = cell.getLinks()
+                    .stream()
+                    .flatMap(x -> x.getLinks().stream())
+                    .filter(x -> x != cell)
+                    .flatMap(x -> x.getLinks().stream())
+                    .filter(x -> cell.getNeighbors().contains(x) && !cell.getLinks().contains(x))
+                    .collect(Collectors.toList());
+
+            if (candidates.size() > almostLinks.size()) {
+                candidates.removeAll(almostLinks);
+            }
+
+            Cell other = getRandom(!otherDeadEnds.isEmpty() ? otherDeadEnds : candidates);
+            cell.link(other);
+            deadEnds.remove(cell);
+            deadEnds.remove(other);
+        }
     }
 
     private Cell getRandom(List<Cell> cells) {

@@ -67,7 +67,8 @@ public class Maze {
         for (int y = 0; y < cells.length; y++) {
             for (int x = 0; x < cells.length; x++) {
                 Cell cell = cells[x][y];
-                builder.append("+").append(cell.isLinked(cell.getNorth()) ? "   " : "---");
+                builder.append(cell.isRoomOnNorthWest() ? " " : "+")
+                        .append(cell.isLinked(cell.getNorth()) ? "   " : "---");
             }
             builder.append("+").append(System.lineSeparator());
 

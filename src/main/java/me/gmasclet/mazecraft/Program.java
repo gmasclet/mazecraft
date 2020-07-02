@@ -45,13 +45,18 @@ public class Program {
      * @param args Unused
      */
     public static void main(String[] args) {
-        int size = promptForSize();
+        int size = promptForInput("Select maze size:");
+        int percentage = promptForInput("Select dead ends removal percentage:");
         String levelName = String.format(
                 "Mazecraft %1$dx%1$d %2$s",
                 size,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
 
-        Maze maze = new MazeGenerator().generate(size);
+        MazeGenerator generator = new MazeGenerator();
+        Maze maze = generator.generate(size);
+        if (percentage > 0) {
+            generator.removeDeadEnds(maze, percentage);
+        }
 
         World world = newWorld(levelName);
         createArena(world, -5, maze.getSize() * 3 + 6);
@@ -69,8 +74,8 @@ public class Program {
         }
     }
 
-    private static int promptForSize() {
-        System.out.println("Select maze size:");
+    private static int promptForInput(String message) {
+        System.out.println(message);
         Scanner scanner = new Scanner(System.in);
         return Math.max(scanner.nextInt(), 0);
     }
@@ -118,9 +123,10 @@ public class Program {
     private static void setBlocks(World world, Maze maze) {
         for (int x = 0; x < maze.getSize(); x++) {
             for (int y = 0; y < maze.getSize(); y++) {
-                setPillar(world, 3 * x, 3 * y);
-
                 Cell cell = maze.getCell(x, y);
+                if (!cell.isRoomOnNorthWest()) {
+                    setPillar(world, 3 * x, 3 * y);
+                }
                 if (!cell.isLinked(cell.getNorth())) {
                     setPillar(world, 3 * x + 1, 3 * y);
                     setPillar(world, 3 * x + 2, 3 * y);

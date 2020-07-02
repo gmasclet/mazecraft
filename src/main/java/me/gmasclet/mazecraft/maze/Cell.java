@@ -92,6 +92,17 @@ public class Cell {
     }
 
     /**
+     * Lists all cells linked with this cell.
+     *
+     * @return A list of cells
+     */
+    public List<Cell> getLinks() {
+        return getNeighbors().stream()
+                .filter(this::isLinked)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Indicates if this cell is linked to the cell provided as argument, that
      * is to say if there is no wall between this cell and the other one. They
      * have to be neighbors, otherwise this method returns false.
@@ -101,5 +112,21 @@ public class Cell {
      */
     public boolean isLinked(Cell cell) {
         return links.contains(cell);
+    }
+
+    /**
+     * Indicates if this cell is part of a "room" shape, that is to say a square
+     * of four interconnected cells, spanning on north and west. Useful for
+     * prettier maze rendering.
+     *
+     * @return true if this cell the south-east part of a room.
+     */
+    public boolean isRoomOnNorthWest() {
+        return north != null
+                && west != null
+                && links.contains(north)
+                && links.contains(west)
+                && north.links.contains(north.west)
+                && west.links.contains(west.north);
     }
 }
